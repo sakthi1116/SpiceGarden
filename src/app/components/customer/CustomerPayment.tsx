@@ -15,6 +15,9 @@ type OrderRecord = {
 
 type PaymentMethod = "UPI" | "Card" | "Cash";
 
+const MERCHANT_UPI_ID = "spicegarden@upi";
+const MERCHANT_NAME = "Spice Garden";
+
 const paymentOptions: { value: PaymentMethod; label: string; icon: typeof Smartphone }[] = [
   { value: "UPI", label: "UPI", icon: Smartphone },
   { value: "Card", label: "Card", icon: CreditCard },
@@ -25,6 +28,7 @@ export default function CustomerPayment() {
   const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>("UPI");
   const [activeOrder, setActiveOrder] = useState<OrderRecord | null>(null);
+  const [upiLinkOpened, setUpiLinkOpened] = useState(false);
 
   useEffect(() => {
     const activeOrderId = localStorage.getItem(CUSTOMER_ACTIVE_ORDER_KEY);
@@ -52,6 +56,32 @@ export default function CustomerPayment() {
     }
     return activeOrder.total;
   }, [activeOrder]);
+
+  const buildUpiLink = () => {
+    if (!activeOrder) {
+      return "";
+    }
+
+    const params = new URLSearchParams({
+      pa: MERCHANT_UPI_ID,
+      pn: MERCHANT_NAME,
+      am: totalAmount.toFixed(2),
+      cu: "INR",
+      tn: `Invoice ${activeOrder.id}`,
+    });
+
+    return `upi://pay?${params.toString()}`;
+  };
+
+  const openUpiApp = () => {
+    const upiLink = buildUpiLink();
+    if (!upiLink) {
+      return;
+    }
+
+    setUpiLinkOpened(true);
+    window.location.href = upiLink;
+  };
 
   const completePayment = () => {
     if (!activeOrder) {
@@ -139,12 +169,53 @@ export default function CustomerPayment() {
         </div>
       </div>
 
+      {selectedMethod === "UPI" && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6 space-y-4">
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">UPI Payment Details</h3>
+            <p className="text-gray-600">
+              Send the amount to the merchant UPI ID below, then open your UPI app to complete the payment.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-xl border border-amber-200 bg-white p-4">
+            <div className="text-sm text-gray-500">Merchant UPI ID</div>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="text-lg font-semibold text-gray-900">{MERCHANT_UPI_ID}</span>
+              <button
+                type="button"
+                onClick={() => navigator.clipboard.writeText(MERCHANT_UPI_ID)}
+                className="rounded-lg border border-amber-300 px-4 py-2 text-sm font-semibold text-amber-700 hover:bg-amber-100 transition-colors"
+              >
+                Copy UPI ID
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={openUpiApp}
+            className="w-full rounded-xl bg-amber-600 px-4 py-4 font-semibold text-white transition-all hover:bg-amber-700 hover:shadow-lg flex items-center justify-center gap-2"
+          >
+            <Smartphone size={20} />
+            Open UPI App
+          </button>
+
+          {upiLinkOpened && (
+            <p className="text-sm text-gray-600">
+              If your UPI app does not open automatically, use the app icon on your device and complete the payment for {MERCHANT_NAME}.
+            </p>
+          )}
+        </div>
+      )}
+
       <button
+        type="button"
         onClick={completePayment}
         className="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-xl hover:shadow-lg transition-all font-semibold flex items-center justify-center gap-2"
       >
         <CheckCircle2 size={20} />
-        Pay Now
+        {selectedMethod === "UPI" ? "Confirm Payment" : "Pay Now"}
       </button>
     </div>
   );
