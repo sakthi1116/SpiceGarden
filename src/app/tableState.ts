@@ -133,3 +133,31 @@ export const markTableOccupied = (tableNumber: number, orderTotal: number): bool
 
   return wasUpdated;
 };
+
+export const markTableAvailable = (tableNumber: number): boolean => {
+  let wasUpdated = false;
+
+  const updatedTables = getAdminTables().map((table) => {
+    if (table.number !== tableNumber) {
+      return table;
+    }
+
+    if (table.status === "available") {
+      return table;
+    }
+
+    wasUpdated = true;
+    return {
+      ...table,
+      status: "available" as const,
+      orderTotal: "₹0",
+      time: "-",
+    };
+  });
+
+  if (wasUpdated) {
+    saveAdminTables(updatedTables);
+  }
+
+  return wasUpdated;
+};

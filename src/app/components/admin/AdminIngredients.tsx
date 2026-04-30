@@ -132,14 +132,14 @@ export default function AdminIngredients() {
 
   return (
     <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between mb-8">
         <div>
           <h2 className="text-3xl font-bold text-gray-800 mb-2">Ingredients</h2>
           <p className="text-gray-500">Manage your inventory stock</p>
         </div>
         <button
           onClick={() => setShowAddIngredient(true)}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-xl hover:shadow-lg transition-all font-medium"
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-xl hover:shadow-lg transition-all font-medium whitespace-nowrap w-full sm:w-auto"
         >
           <Plus size={20} />
           Add Ingredient
@@ -204,7 +204,7 @@ export default function AdminIngredients() {
       </div>
 
       {/* Ingredients Grid */}
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {filteredIngredients.map((ingredient) => (
           <div
             key={ingredient.id}
@@ -259,7 +259,7 @@ export default function AdminIngredients() {
               </div>
             </div>
 
-            <button className="w-full py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="w-full py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap">
               Update Stock
             </button>
           </div>

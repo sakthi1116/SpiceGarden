@@ -1,7 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Phone, Mail, IndianRupee, X } from "lucide-react";
 
-const suppliersData = [
+type SupplierRecord = {
+  id: number;
+  name: string;
+  contact: string;
+  email: string;
+  category: string;
+  totalSupply: string;
+};
+
+const SUPPLIERS_STORAGE_KEY = "admin_suppliers";
+
+const suppliersData: SupplierRecord[] = [
   {
     id: 1,
     name: "Fresh Vegetables Mart",
@@ -36,27 +47,91 @@ const suppliersData = [
   },
 ];
 
+const normalizeSuppliers = (suppliers: SupplierRecord[]) =>
+  suppliers.map((supplier, index) => ({
+    ...supplier,
+    id: typeof supplier.id === "number" ? supplier.id : index + 1,
+  }));
+
 export default function AdminSuppliers() {
   const [showAddSupplier, setShowAddSupplier] = useState(false);
+  const [suppliers, setSuppliers] = useState<SupplierRecord[]>(suppliersData);
+  const [supplierName, setSupplierName] = useState("");
+  const [supplierCategory, setSupplierCategory] = useState("Vegetables");
+  const [supplierContact, setSupplierContact] = useState("");
+  const [supplierEmail, setSupplierEmail] = useState("");
+
+  useEffect(() => {
+    const savedSuppliers = localStorage.getItem(SUPPLIERS_STORAGE_KEY);
+
+    if (savedSuppliers) {
+      try {
+        const parsedSuppliers = JSON.parse(savedSuppliers) as SupplierRecord[];
+        if (Array.isArray(parsedSuppliers)) {
+          setSuppliers(normalizeSuppliers(parsedSuppliers));
+          return;
+        }
+      } catch {
+        // fall back to defaults
+      }
+    }
+
+    localStorage.setItem(SUPPLIERS_STORAGE_KEY, JSON.stringify(suppliersData));
+  }, []);
+
+  const saveSuppliers = (nextSuppliers: SupplierRecord[]) => {
+    setSuppliers(nextSuppliers);
+    localStorage.setItem(SUPPLIERS_STORAGE_KEY, JSON.stringify(nextSuppliers));
+    window.dispatchEvent(new Event("local-storage-update"));
+  };
+
+  const handleAddSupplier = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const trimmedName = supplierName.trim();
+    const trimmedContact = supplierContact.trim();
+    const trimmedEmail = supplierEmail.trim();
+
+    if (!trimmedName || !trimmedContact || !trimmedEmail) {
+      alert("Please fill in the supplier name, category, contact number, and email.");
+      return;
+    }
+
+    const nextSupplier: SupplierRecord = {
+      id: Date.now(),
+      name: trimmedName,
+      contact: trimmedContact,
+      email: trimmedEmail,
+      category: supplierCategory,
+      totalSupply: "₹0/month",
+    };
+
+    saveSuppliers([nextSupplier, ...suppliers]);
+    setSupplierName("");
+    setSupplierCategory("Vegetables");
+    setSupplierContact("");
+    setSupplierEmail("");
+    setShowAddSupplier(false);
+  };
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="p-4 sm:p-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Suppliers</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Suppliers</h2>
           <p className="text-gray-500">Manage your supplier relationships</p>
         </div>
         <button
           onClick={() => setShowAddSupplier(true)}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-xl hover:shadow-lg transition-all font-medium"
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-xl hover:shadow-lg transition-all font-medium whitespace-nowrap w-full sm:w-auto"
         >
           <Plus size={20} />
           Add Supplier
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        {suppliersData.map((supplier) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {suppliers.map((supplier) => (
           <div
             key={supplier.id}
             className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow"
@@ -88,10 +163,10 @@ export default function AdminSuppliers() {
             </div>
 
             <div className="flex gap-3">
-              <button className="flex-1 py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors">
+              <button className="flex-1 py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap">
                 Edit
               </button>
-              <button className="flex-1 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition-all">
+              <button className="flex-1 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition-all whitespace-nowrap">
                 Contact
               </button>
             </div>
@@ -113,13 +188,15 @@ export default function AdminSuppliers() {
               </button>
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleAddSupplier}>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Supplier Name
                 </label>
                 <input
                   type="text"
+                  value={supplierName}
+                  onChange={(event) => setSupplierName(event.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500"
                   placeholder="Enter supplier name"
                 />
@@ -129,7 +206,11 @@ export default function AdminSuppliers() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Category
                 </label>
-                <select className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500">
+                <select
+                  value={supplierCategory}
+                  onChange={(event) => setSupplierCategory(event.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
                   <option>Vegetables</option>
                   <option>Meat</option>
                   <option>Spices</option>
@@ -144,6 +225,8 @@ export default function AdminSuppliers() {
                 </label>
                 <input
                   type="tel"
+                  value={supplierContact}
+                  onChange={(event) => setSupplierContact(event.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500"
                   placeholder="+91 XXXXX XXXXX"
                 />
@@ -155,6 +238,8 @@ export default function AdminSuppliers() {
                 </label>
                 <input
                   type="email"
+                  value={supplierEmail}
+                  onChange={(event) => setSupplierEmail(event.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500"
                   placeholder="email@example.com"
                 />
