@@ -27,69 +27,70 @@ const lowStockItems = [
 
 export default function AdminDashboard() {
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">Dashboard</h2>
-        <p className="text-gray-500">Overview of restaurant operations</p>
+    <div className="p-4 sm:p-8 w-full max-w-full overflow-x-hidden min-w-0">
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Dashboard</h2>
+        <p className="text-sm sm:text-base text-gray-500">Overview of restaurant operations</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-6 mb-8">
-        <div className="bg-white border border-gray-200 rounded-2xl p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-green-50 rounded-xl">
-              <IndianRupee size={24} className="text-green-600" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 w-full min-w-0">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 overflow-hidden min-w-0">
+          <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="p-2 sm:p-3 bg-green-50 rounded-xl">
+              <IndianRupee size={20} className="text-green-600 sm:w-6 sm:h-6" />
             </div>
-            <span className="text-green-600 text-sm font-medium">+12.5%</span>
+            <span className="text-green-600 text-xs sm:text-sm font-medium">+12.5%</span>
           </div>
-          <div className="text-3xl font-bold text-gray-800 mb-1">₹1,36,700</div>
-          <div className="text-sm text-gray-500">Total Revenue (Week)</div>
+          <div className="text-xl sm:text-3xl font-bold text-gray-800 mb-1 truncate">₹1,36,700</div>
+          <div className="text-xs sm:text-sm text-gray-500 truncate">Total Revenue</div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-blue-50 rounded-xl">
-              <Users size={24} className="text-blue-600" />
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 overflow-hidden">
+          <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="p-2 sm:p-3 bg-blue-50 rounded-xl">
+              <Users size={20} className="text-blue-600 sm:w-6 sm:h-6" />
             </div>
-            <span className="text-blue-600 text-sm font-medium">+8.2%</span>
+            <span className="text-blue-600 text-xs sm:text-sm font-medium">+8.2%</span>
           </div>
-          <div className="text-3xl font-bold text-gray-800 mb-1">248</div>
-          <div className="text-sm text-gray-500">Total Orders (Week)</div>
+          <div className="text-xl sm:text-3xl font-bold text-gray-800 mb-1 truncate">248</div>
+          <div className="text-xs sm:text-sm text-gray-500 truncate">Total Orders</div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-purple-50 rounded-xl">
-              <Utensils size={24} className="text-purple-600" />
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 overflow-hidden">
+          <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="p-2 sm:p-3 bg-purple-50 rounded-xl">
+              <Utensils size={20} className="text-purple-600 sm:w-6 sm:h-6" />
             </div>
-            <span className="text-purple-600 text-sm font-medium">12/20</span>
+            <span className="text-purple-600 text-xs sm:text-sm font-medium">12/20</span>
           </div>
-          <div className="text-3xl font-bold text-gray-800 mb-1">60%</div>
-          <div className="text-sm text-gray-500">Table Occupancy</div>
+          <div className="text-xl sm:text-3xl font-bold text-gray-800 mb-1 truncate">60%</div>
+          <div className="text-xs sm:text-sm text-gray-500 truncate">Table Occupancy</div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-orange-50 rounded-xl">
-              <Package size={24} className="text-orange-600" />
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 overflow-hidden">
+          <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="p-2 sm:p-3 bg-orange-50 rounded-xl">
+              <Package size={20} className="text-orange-600 sm:w-6 sm:h-6" />
             </div>
-            <span className="text-red-600 text-sm font-medium">Low</span>
+            <span className="text-red-600 text-xs sm:text-sm font-medium">Low</span>
           </div>
-          <div className="text-3xl font-bold text-gray-800 mb-1">4</div>
-          <div className="text-sm text-gray-500">Low Stock Items</div>
+          <div className="text-xl sm:text-3xl font-bold text-gray-800 mb-1 truncate">4</div>
+          <div className="text-xs sm:text-sm text-gray-500 truncate">Low Stock Items</div>
         </div>
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-3 gap-6 mb-8">
-        <div className="col-span-2 bg-white border border-gray-200 rounded-2xl p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-6">Revenue Trend</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={revenueData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="day" stroke="#6b7280" tick={{ fontSize: 12 }} />
-              <YAxis stroke="#6b7280" tick={{ fontSize: 12 }} />
-              <Tooltip
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 w-full min-w-0">
+        <div className="col-span-1 lg:col-span-2 bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 overflow-hidden min-w-0">
+          <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-4 sm:mb-6">Revenue Trend</h3>
+          <div className="w-full h-[250px] sm:h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={revenueData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="day" stroke="#6b7280" tick={{ fontSize: 10 }} />
+                <YAxis stroke="#6b7280" tick={{ fontSize: 10 }} />
+                <Tooltip
                 contentStyle={{
                   backgroundColor: "#fff",
                   border: "1px solid #e5e7eb",
@@ -106,26 +107,27 @@ export default function AdminDashboard() {
               />
             </LineChart>
           </ResponsiveContainer>
+          </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <AlertCircle size={20} className="text-orange-600" />
-            <h3 className="text-lg font-bold text-gray-800">Low Stock Alert</h3>
+        <div className="col-span-1 bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 overflow-hidden">
+          <div className="flex items-center gap-2 mb-4 sm:mb-6">
+            <AlertCircle size={20} className="text-orange-600 sm:w-5 sm:h-5 w-4 h-4 flex-shrink-0" />
+            <h3 className="text-base sm:text-lg font-bold text-gray-800">Low Stock</h3>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {lowStockItems.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-orange-50 rounded-xl"
+                className="flex items-center justify-between p-2 sm:p-3 bg-orange-50 rounded-xl"
               >
-                <div>
-                  <div className="font-medium text-gray-800">{item.name}</div>
-                  <div className="text-sm text-gray-500">
+                <div className="min-w-0 pr-2">
+                  <div className="font-medium text-gray-800 text-sm sm:text-base truncate">{item.name}</div>
+                  <div className="text-xs sm:text-sm text-gray-500">
                     {item.stock} {item.unit} left
                   </div>
                 </div>
-                <div className="px-2 py-1 bg-orange-100 text-orange-600 rounded text-xs font-medium">
+                <div className="px-2 py-1 bg-orange-100 text-orange-600 rounded text-xs font-medium whitespace-nowrap">
                   Low
                 </div>
               </div>
