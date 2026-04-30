@@ -145,14 +145,6 @@ const menuItems = [
     image: "https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=400&q=80",
   },
   {
-    id: 18,
-    name: "Fish Curry",
-    description: "Fresh fish cooked in tangy coconut gravy",
-    price: 340,
-    category: "Main Course",
-    image: "https://images.unsplash.com/photo-1580959375944-0b6e31f12f82?w=400&q=80",
-  },
-  {
     id: 19,
     name: "Paneer Butter Masala",
     description: "Cottage cheese in creamy tomato butter sauce",
@@ -275,6 +267,18 @@ export default function CustomerMenu() {
         </select>
         {availableTables.length === 0 && (
           <p className="text-xs text-red-600 mt-2">No tables are available right now.</p>
+        )}
+        {availableTables.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {availableTables.map((table) => (
+              <span
+                key={table.id}
+                className="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700"
+              >
+                Table {table.number}
+              </span>
+            ))}
+          </div>
         )}
       </div>
 

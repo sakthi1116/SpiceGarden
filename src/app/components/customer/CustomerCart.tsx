@@ -28,7 +28,6 @@ const menuItems = [
   { id: 15, name: "Raita", price: 80, image: "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=200&q=80" },
   { id: 16, name: "Ice Cream", price: 100, image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&q=80" },
   { id: 17, name: "Chole Bhature", price: 180, image: "https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=200&q=80" },
-  { id: 18, name: "Fish Curry", price: 340, image: "https://images.unsplash.com/photo-1580959375944-0b6e31f12f82?w=200&q=80" },
   { id: 19, name: "Paneer Butter Masala", price: 290, image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=200&q=80" },
   { id: 20, name: "Jeera Rice", price: 130, image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=200&q=80" },
 ];
@@ -291,6 +290,18 @@ export default function CustomerCart() {
                 </select>
                 {availableTables.length === 0 && (
                   <p className="text-xs text-red-600 mt-2">No tables are available right now.</p>
+                )}
+                {availableTables.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {availableTables.map((table) => (
+                      <span
+                        key={table.id}
+                        className="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700"
+                      >
+                        Table {table.number}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </div>
 
